@@ -12,6 +12,10 @@ const fs = require('fs');
 const os = require('os');
 const Student = require('./models/student');
 
+const passport = require('./auth');
+
+app.use(passport.initialize());
+const localAuthMiddleware = passport.authenticate('local', {session: false})
 
 console.log("hi from server");
 console.log(note.temp);
@@ -89,7 +93,8 @@ app.get('/git', (req,res) =>{
 // })
 const studentRoutes = require('./routes/studentRoutes');
 
-app.use('/',studentRoutes);
+app.use('/',localAuthMiddleware,studentRoutes);
+// app.use('/',studentRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
