@@ -2,12 +2,6 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 // Define the MongoDB connection URL
-// const mongoURL = process.env.MONGODB_URL_LOCAL // Replace 'mydatabase' with your database name
-// const mongoURL = process.env.MONGODB_URL;
-// const mongoURL = 'mongodb://127.0.0.1:27017/university';
-// const mongoURL = 'mongodb+srv://sifatsajin88:HXPvIvsWwZU1mwfW@university.efxne.mongodb.net/university?retryWrites=true&w=majority';
-// const mongoURL = 'mongodb+srv://sifatsajin88:HXPvIvsWwZU1mwfW@university.efxne.mongodb.net/';
-
 const mongoURL = process.env.MONGODB_URL_ATLAS
 // const mongoURL = process.env.MONGODB_URL_LOCAL
 
