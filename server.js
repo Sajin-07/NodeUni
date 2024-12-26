@@ -52,48 +52,14 @@ app.get('/git', (req,res) =>{
     })
     .catch((error) => console.log(error))
 
-    
 })
 
 
-// app.post('/student', async(req,res)=>{
-//     try {
-//         const data = req.body;
-//         const newStudent = new Student(data);
-        
-//         const saveIn = await newStudent.save();
-//         console.log('Data saved');
-//         res.status(200).json(saveIn)
-        
-        
-//     } catch (error) {
-//         console.log(error);
-//         res.status(500).json('Internal server Error')
-        
-        
-//     }
 
-// })
-
-// //DB theke kichu khujte hoile jei model dia schema banaisi oi model naame diya khujte hobe. Do all other operations using model name.
-// app.get('/fetch', async(req,res)=>{
-//     try {
-//         const data = await Student.find()
-//         console.log('Data fetched');
-//         res.status(200).json(data)
-        
-        
-//     } catch (error) {
-//         console.log(error);
-//         res.status(500).json('Internal server Error')
-        
-        
-//     }
-
-// })
 const studentRoutes = require('./routes/studentRoutes');
 
-app.use('/',localAuthMiddleware,studentRoutes);
+// app.use('/',localAuthMiddleware,studentRoutes);
+app.use('/',studentRoutes);
 // app.use('/',studentRoutes);
 
 const PORT = process.env.PORT || 3000;

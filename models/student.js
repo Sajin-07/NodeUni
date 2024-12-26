@@ -40,7 +40,7 @@ const studentSchema = mongoose.Schema({
 
 
 studentSchema.pre('save', async function(next){ // it means password DB te save korar age hash korbo then next() call diye DB te save korbo. pre middleware function mongoose provide kore.
-    const student = this; //means do this for all users
+    const student = this; //means do this for all users/documents
 
     // Hash the password only if it has been modified (or is new)
     if(!student.isModified('password')) return next();

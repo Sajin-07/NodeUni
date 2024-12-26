@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Student = require('../models/student');
+const {jwtAuthMiddleware, generateToken} = require('./../jwt');
 
-router.post('/student', async(req,res)=>{
+router.post('/signup', async(req,res)=>{
     try {
         const data = req.body;
         const newStudent = new Student(data);
@@ -21,8 +22,59 @@ router.post('/student', async(req,res)=>{
 
 })
 
+
+// Login Route
+router.post('/login', async(req, res) => {
+    try{
+        // Extract username and password from request body
+        const {username, password} = req.body;
+
+        // Find the user by username
+        const user = await Student.findOne({username: username});
+
+        // If user does not exist or password does not match, return error
+        if( !user || !(await user.comparePassword(password))){
+            return res.status(401).json({error: 'Invalid username or password'});
+        }
+
+        // generate Token 
+        const payload = {
+            id: user.id,
+            username: user.username
+        }
+        const token = generateToken(payload);
+
+        // resturn token as response
+        res.json({token})
+    }catch(err){
+        console.error(err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Profile route
+router.get('/profile', jwtAuthMiddleware, async (req, res) => {
+    try{
+        const userData = req.user;
+        console.log("User Data: ", userData);
+
+        const userId = userData.id;
+        const user = await Student.findById(userId);
+
+        res.status(200).json({user});
+    }catch(err){
+        console.error(err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+})
+
+
+
+
+
+
 //DB theke kichu khujte hoile jei model dia schema banaisi oi model naame diya khujte hobe. Do all other operations using model name.
-router.get('/fetch', async(req,res)=>{
+router.get('/fetch',jwtAuthMiddleware, async(req,res)=>{
     try {
         const data = await Student.find()
         console.log('Data fetched');
@@ -57,7 +109,7 @@ router.get('/fetch/:deptType', async(req,res)=>{
     }
 })
 
-router.put('/fetch/:id', async(req,res)=>{
+router.put('/fetch/:id',jwtAuthMiddleware, async(req,res)=>{
     try {
         stID = req.params.id
         const updatedStudentData = req.body;
