@@ -35,6 +35,9 @@ const studentSchema = mongoose.Schema({
         required: true,
         type: String
     },
+    photo: {
+        type: String
+    }
 
 })
 
@@ -43,7 +46,7 @@ studentSchema.pre('save', async function(next){ // it means password DB te save 
     const student = this; //means do this for all users/documents
 
     // Hash the password only if it has been modified (or is new)
-    if(!student.isModified('password')) return next();
+    if(!student.isModified('password')) return next();//If the password has not been modified, the middleware skips the hashing process by calling next() and exiting early. When return next(); is executed, the control immediately leaves the middleware function, bypassing the subsequent code, including the try-catch block.
 
     try{
         // hash password generation
@@ -89,3 +92,18 @@ Internally, first retrieve salt from this.password and it hashes the enteredPass
 */
 const Student = mongoose.model('Student', studentSchema);
 module.exports = Student;
+
+
+
+/*
+Data Flow Overview
+
+1. User Form Submission:	User submits data (req.body) and a file (req.file) via the /signup API.
+2. File Processing:	Multer processes the file, storing it in memory as a Buffer.
+3. Data Validation:	Mongoose validates the schema (e.g., required fields, enum values).
+4. Password Hashing: The pre middleware(studentSchema.pre) hashes the password before saving.
+5. Database Save:	A new Student document is saved to MongoDB.
+6. Response to User	On success, the saved document is returned; on error, a failure message is sent.
+
+
+*/
